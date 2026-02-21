@@ -32,6 +32,7 @@ $data = [
         'currency' => $currency
     ],
     'country'=> 'BFA',
+    'msisdn' => $input['msisdn'] ?? null,
     'reason' => 'Paiement commande'
 ];
 
@@ -57,6 +58,7 @@ echo json_encode([
     'requete_envoyee' => $data
 ]);
 ?>
+
 
 
 
