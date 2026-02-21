@@ -1,6 +1,6 @@
 <?php
-// Ton nouveau jeton PawaPay (sandbox)
-$PAWAPAY_TOKEN = "eyJraWQiOiIxIiwiYWxnIjoiRVMyNTYifQ.eyJ0dCI6IkFBVCIsInN1YiI6IjE2OTA2IiwibWF2IjoiMSIsImV4cCI6MjA4NzIwMDk0OCwiaWF0IjoxNzcxNjY4MTQ4LCJwbSI6IkRBRixQQUYiLCJqdGkiOiIyZmIyOWE5OS03ZTQ0LTRjNzUtOGRjMC1hYTY5NzNhNjhlMzUifQ.FTSuf5JiXPTRUiGA5fHHZLv7DTzkhX-DdxFj3lxpbswKQD6-n3_nPjhvbzV1cTPPwYBQ-xf6zFRK9xk7YygxGA";
+// Ton jeton PawaPay (sandbox)
+$PAWAPAY_TOKEN = "ton_jeton_pawapay_ici"; // Mets ton vrai jeton
 
 // Fonction pour générer un UUID v4 valide
 function gen_uuid() {
@@ -13,23 +13,25 @@ function gen_uuid() {
     );
 }
 
-// Récupère les données envoyées (POST JSON ou formulaire)
+// Récupère les données envoyées
 $input = json_decode(file_get_contents('php://input'), true);
 if (!$input) {
     $input = $_POST;
 }
 
-// Utilise un depositId fourni ou en génère un nouveau
 $depositId = $input['depositId'] ?? gen_uuid();
-$amount = $input['amount'] ?? '1000'; // 10 FCFA en centimes
+$amount = $input['amount'] ?? '1000';
 $currency = $input['currency'] ?? 'XOF';
 
-// Prépare la requête vers PawaPay
+// Structure CORRECTE pour l'API PawaPay
 $data = [
     'depositId' => $depositId,
     'returnUrl' => 'https://paiement-orange.onrender.com/merci.html',
-    'amount' =>(int)$amount,
-    'currency' => $currency,
+    'amountDetails' => [
+        'amount' => $amount,
+        'currency' => $currency
+    ],
+    'country' => 'SEN', // Pour fixer le pays (Sénégal)
     'reason' => 'Paiement commande'
 ];
 
@@ -47,7 +49,7 @@ $response = curl_exec($ch);
 $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 curl_close($ch);
 
-// Affiche la réponse pour debug
+// Affiche la réponse
 header('Content-Type: application/json');
 echo json_encode([
     'http_code' => $http_code,
@@ -55,7 +57,6 @@ echo json_encode([
     'requete_envoyee' => $data
 ]);
 ?>
-
 
 
 
