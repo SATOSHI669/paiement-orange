@@ -1,0 +1,10 @@
+FROM php:8.2-apache
+
+# Active les extensions nécessaires
+RUN docker-php-ext-install curl
+
+# Copie tous tes fichiers dans le serveur
+COPY . /var/www/html/
+
+# Configure Apache pour accepter les requêtes
+RUN a2enmod rewrite

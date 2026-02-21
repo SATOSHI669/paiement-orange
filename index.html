@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Paiement Orange Money</title>
+</head>
+<body>
+    <h1>Finaliser votre paiement</h1>
+    <p>Montant : 10 FCFA (test)</p>
+    <button onclick="lancerPaiement()">Payer avec Orange Money</button>
+
+    <script>
+    async function lancerPaiement() {
+        // Génère un ID unique pour la commande
+        const depositId = 'commande-' + Date.now() + '-' + Math.random().toString(36).substring(2);
+        
+        try {
+            // Appelle ton futur service sur Render
+            const response = await fetch("https://TON-SERVICE-RENDER.com/payer.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    depositId: depositId,
+                    amount: "1000", // 10 FCFA
+                    currency: "XOF"
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.redirectUrl) {
+                window.location.href = result.redirectUrl;
+            } else {
+                alert("Erreur : " + JSON.stringify(result));
+            }
+        } catch (error) {
+            alert("Erreur de connexion : " + error.message);
+        }
+    }
+    </script>
+</body>
+</html>
