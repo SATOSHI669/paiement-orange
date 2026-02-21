@@ -1,18 +1,27 @@
 <?php
-// Ton jeton PawaPay (sandbox)
-$PAWAPAY_TOKEN = "eyJraWQiOiIxIiwiYWxnIjoiRVMyNTYifQ.eyJ0dCI6IkFBVCIsInN1YiI6IjE2OTA2IiwibWF2IjoiMSIsImV4cCI6MjA4NzE5ODg5MywiaWF0IjoxNzcxNjY2MDkzLCJwbSI6IkRBRixQQUYiLCJqdGkiOiJiZTQwM2M4My0yMjYyLTRhZmQtOGYwMC0yMDcxODRmMzI2NTgifQ.FOKGwOWYheTCXGUhgRhZluu-6j2TiwYqmlkpWYXZTgXzf06CyGawScPQeXPKBKRhSH58Tm8OLjFzE-WkgV2Oug
-"; // Remplace par le vrai jeton
+// Ton nouveau jeton PawaPay (sandbox)
+$PAWAPAY_TOKEN = "eyJraWQiOiIxIiwiYWxnIjoiRVMyNTYifQ.eyJ0dCI6IkFBVCIsInN1YiI6IjE2OTA2IiwibWF2IjoiMSIsImV4cCI6MjA4NzIwMDk0OCwiaWF0IjoxNzcxNjY4MTQ4LCJwbSI6IkRBRixQQUYiLCJqdGkiOiIyZmIyOWE5OS03ZTQ0LTRjNzUtOGRjMC1hYTY5NzNhNjhlMzUifQ.FTSuf5JiXPTRUiGA5fHHZLv7DTzkhX-DdxFj3lxpbswKQD6-n3_nPjhvbzV1cTPPwYBQ-xf6zFRK9xk7YygxGA";
 
-// Reçoit les données envoyées (par POST ou GET)
+// Fonction pour générer un UUID v4 valide
+function gen_uuid() {
+    return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+        mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+        mt_rand(0, 0xffff),
+        mt_rand(0, 0x0fff) | 0x4000,
+        mt_rand(0, 0x3fff) | 0x8000,
+        mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+    );
+}
+
+// Récupère les données envoyées (POST JSON ou formulaire)
 $input = json_decode(file_get_contents('php://input'), true);
-
-// Si pas de données en JSON, on prend les données POST classiques
 if (!$input) {
     $input = $_POST;
 }
 
-$depositId = $input['depositId'] ?? 'test-' . uniqid();
-$amount = $input['amount'] ?? '1000';
+// Utilise un depositId fourni ou en génère un nouveau
+$depositId = $input['depositId'] ?? gen_uuid();
+$amount = $input['amount'] ?? '1000'; // 10 FCFA en centimes
 $currency = $input['currency'] ?? 'XOF';
 
 // Prépare la requête vers PawaPay
@@ -24,6 +33,7 @@ $data = [
     'reason' => 'Paiement commande'
 ];
 
+// Envoi à l'API PawaPay
 $ch = curl_init('https://api.sandbox.pawapay.io/v2/paymentpage');
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
@@ -37,7 +47,7 @@ $response = curl_exec($ch);
 $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 curl_close($ch);
 
-// Affiche la réponse complète pour debug
+// Affiche la réponse pour debug
 header('Content-Type: application/json');
 echo json_encode([
     'http_code' => $http_code,
@@ -45,5 +55,6 @@ echo json_encode([
     'requete_envoyee' => $data
 ]);
 ?>
+
 
 
