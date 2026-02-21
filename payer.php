@@ -28,7 +28,7 @@ $currency = $input['currency'] ?? 'XOF';
 $data = [
     'depositId' => $depositId,
     'returnUrl' => 'https://paiement-orange.onrender.com/merci.html',
-    'amount' => $amount,
+    'amount' =>(int)$amount,
     'currency' => $currency,
     'reason' => 'Paiement commande'
 ];
@@ -55,6 +55,7 @@ echo json_encode([
     'requete_envoyee' => $data
 ]);
 ?>
+
 
 
 
