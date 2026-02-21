@@ -35,7 +35,12 @@ if ($http_code == 200) {
     echo $response; // Renvoie la réponse à ton HTML
 } else {
     http_response_code(500);
-    echo json_encode(['error' => 'Erreur PawaPay']);
+    echo json_encode([
+        'error' => 'Erreur PawaPay',
+        'http_code' => $http_code,
+        'reponse' => $response
+    ]);
 }
 
 ?>
+
