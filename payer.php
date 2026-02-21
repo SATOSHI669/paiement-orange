@@ -1,18 +1,24 @@
 <?php
-// Ton jeton PawaPay (celui du sandbox pour tester)
-$PAWAPAY_TOKEN = "eyJraWQiOiIxIiwiYWxnIjoiRVMyNTYifQ.eyJ0dCI6IkFBVCIsInN1YiI6IjE2OTA2IiwibWF2IjoiMSIsImV4cCI6MjA4NzE5ODg5MywiaWF0IjoxNzcxNjY2MDkzLCJwbSI6IkRBRixQQUYiLCJqdGkiOiJiZTQwM2M4My0yMjYyLTRhZmQtOGYwMC0yMDcxODRmMzI2NTgifQ.FOKGwOWYheTCXGUhgRhZluu-6j2TiwYqmlkpWYXZTgXzf06CyGawScPQeXPKBKRhSH58Tm8OLjFzE-WkgV2Oug";
+// Ton jeton PawaPay (sandbox)
+$PAWAPAY_TOKEN = "eyJraWQiOiIxIiwiYWxnIjoiRVMyNTYifQ.eyJ0dCI6IkFBVCIsInN1YiI6IjE2OTA2IiwibWF2IjoiMSIsImV4cCI6MjA4NzE5ODg5MywiaWF0IjoxNzcxNjY2MDkzLCJwbSI6IkRBRixQQUYiLCJqdGkiOiJiZTQwM2M4My0yMjYyLTRhZmQtOGYwMC0yMDcxODRmMzI2NTgifQ.FOKGwOWYheTCXGUhgRhZluu-6j2TiwYqmlkpWYXZTgXzf06CyGawScPQeXPKBKRhSH58Tm8OLjFzE-WkgV2Oug
+"; // Remplace par le vrai jeton
 
-// Reçoit les données envoyées par ton HTML
+// Reçoit les données envoyées (par POST ou GET)
 $input = json_decode(file_get_contents('php://input'), true);
 
-$depositId = $input['depositId'];
-$amount = $input['amount'];
-$currency = $input['currency'];
+// Si pas de données en JSON, on prend les données POST classiques
+if (!$input) {
+    $input = $_POST;
+}
+
+$depositId = $input['depositId'] ?? 'test-' . uniqid();
+$amount = $input['amount'] ?? '1000';
+$currency = $input['currency'] ?? 'XOF';
 
 // Prépare la requête vers PawaPay
 $data = [
     'depositId' => $depositId,
-    'returnUrl' => 'https://ton-site.netlify.app/merci.html',
+    'returnUrl' => 'https://paiement-orange.onrender.com/merci.html',
     'amount' => $amount,
     'currency' => $currency,
     'reason' => 'Paiement commande'
@@ -31,16 +37,13 @@ $response = curl_exec($ch);
 $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 curl_close($ch);
 
-if ($http_code == 200) {
-    echo $response; // Renvoie la réponse à ton HTML
-} else {
-    http_response_code(500);
-    echo json_encode([
-        'error' => 'Erreur PawaPay',
-        'http_code' => $http_code,
-        'reponse' => $response
-    ]);
-}
-
+// Affiche la réponse complète pour debug
+header('Content-Type: application/json');
+echo json_encode([
+    'http_code' => $http_code,
+    'reponse_pawapay' => json_decode($response, true),
+    'requete_envoyee' => $data
+]);
 ?>
+
 
