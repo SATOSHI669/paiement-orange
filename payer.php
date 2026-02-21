@@ -31,7 +31,7 @@ $data = [
         'amount' => $amount,
         'currency' => $currency
     ],
-    'country' => 'SEN', // Pour fixer le pays (Sénégal)
+    
     'reason' => 'Paiement commande'
 ];
 
@@ -57,6 +57,7 @@ echo json_encode([
     'requete_envoyee' => $data
 ]);
 ?>
+
 
 
 
