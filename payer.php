@@ -1,6 +1,6 @@
 <?php
 // Ton jeton PawaPay (celui du sandbox pour tester)
-$PAWAPAY_TOKEN = "ton_jeton_pawapay_ici";
+$PAWAPAY_TOKEN = "eyJraWQiOiIxIiwiYWxnIjoiRVMyNTYifQ.eyJ0dCI6IkFBVCIsInN1YiI6IjE2OTA2IiwibWF2IjoiMSIsImV4cCI6MjA4NzE5ODg5MywiaWF0IjoxNzcxNjY2MDkzLCJwbSI6IkRBRixQQUYiLCJqdGkiOiJiZTQwM2M4My0yMjYyLTRhZmQtOGYwMC0yMDcxODRmMzI2NTgifQ.FOKGwOWYheTCXGUhgRhZluu-6j2TiwYqmlkpWYXZTgXzf06CyGawScPQeXPKBKRhSH58Tm8OLjFzE-WkgV2Oug";
 
 // Reçoit les données envoyées par ton HTML
 $input = json_decode(file_get_contents('php://input'), true);
@@ -37,4 +37,5 @@ if ($http_code == 200) {
     http_response_code(500);
     echo json_encode(['error' => 'Erreur PawaPay']);
 }
+
 ?>
