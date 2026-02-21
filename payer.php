@@ -1,6 +1,6 @@
 <?php
 // Ton jeton PawaPay (sandbox)
-$PAWAPAY_TOKEN = "ton_jeton_pawapay_ici"; // Mets ton vrai jeton
+$PAWAPAY_TOKEN = "eyJraWQiOiIxIiwiYWxnIjoiRVMyNTYifQ.eyJ0dCI6IkFBVCIsInN1YiI6IjE2OTA2IiwibWF2IjoiMSIsImV4cCI6MjA4NzIwMDk0OCwiaWF0IjoxNzcxNjY4MTQ4LCJwbSI6IkRBRixQQUYiLCJqdGkiOiIyZmIyOWE5OS03ZTQ0LTRjNzUtOGRjMC1hYTY5NzNhNjhlMzUifQ.FTSuf5JiXPTRUiGA5fHHZLv7DTzkhX-DdxFj3lxpbswKQD6-n3_nPjhvbzV1cTPPwYBQ-xf6zFRK9xk7YygxGA"; // Mets ton vrai jeton
 
 // Fonction pour générer un UUID v4 valide
 function gen_uuid() {
@@ -57,6 +57,7 @@ echo json_encode([
     'requete_envoyee' => $data
 ]);
 ?>
+
 
 
 
